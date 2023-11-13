@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indiana State Parks</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.6.0/dist/sweetalert2.min.css">
+  </head>
+  <body>
+    <nav class="home-nav">
+      <div class="nav-logo">
+        <img src="images/INP-main-logo.jpg" alt="">
+      <span class="home-nav-head-txt">Indiana State Parks</span>
+      </div>
+      
+      
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a a href="#parks">Parks</a>
+        <a href="#profile">Profile</a>
+        <a href="#profile" id="userProfile" style="display: none;">
+          
+          <div id="logoutBtn">Logout</div></a>
+          <span id="userName"></span>
+        <div class="login-signup-button" id="loginSignupLinks">
+          <a href="#login">Login</a>
+          <a href="#signup">Sign-up</a>
+        </div>
+        <div class="search-box">
+          <button class="btn-search"><i class="fas fa-search"></i></button>
+          <input type="text" class="input-search" placeholder="Type to Search...">
+        </div>
+      </div>
+
+      <!-- nav links for responsive nav  -->
+      <div class="nav-ham-menu">
+        <div class="nav-bar"></div>
+        <div class="nav-bar"></div>
+        <div class="nav-bar"></div>
+      </div>
+    </nav>
+
+    <div id="app"></div>
+
+
+    <footer class="footer-container">
+      <div class="footer-col-wrapper">
+        <div class="footer-col">
+          <h2>State Information</h2>
+          <ul>
+            <li><a href="https://iga.in.gov/legislative/2023/current/ic/" target="_blank">Indiana Code</a></li>
+          </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="http://www.in.gov/legislative/iac/" target="_blank">Indiana Administrative Code</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://www.in.gov/core/news_events.html" target="_blank">IN.gov News &amp; Events</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://www.in.gov/core/gov-delivery.html" target="_blank">Email Updates</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://www.in.gov/core/awards.html" target="_blank">Awards</a></li>
+        </ul>
+       </div>   
+      </div>
+
+      <div class="footer-col-wrapper">
+        <div class="footer-col">
+          <h2>IN.gov Resources</h2>
+          <ul>
+            <li><a href="https://www.in.gov/apps/iot/find-a-person/" target="_blank">Find a State Employee</a></li>
+          </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://www.in.gov/core/find_agency.html" target="_blank">Find an Agency</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://www.in.gov/core/map.html" target="_blank">Maps &amp; Information</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://faqs.in.gov/hc/en-us" target="_blank">IN.gov FAQs</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://www.in.gov/core/info_employees.html" target="_blank">State Employee Resources</a></li>
+        </ul>
+       </div>   
+      </div>
+
+      <img class="footer-img" src="images/in-seal.png" alt="Indiana State Seal">
+
+      <div class="footer-col-wrapper">
+        <div class="footer-col">
+          <h2>State Information Center</h2>
+          <ul>
+            <li><a href="https://www.in.gov/idoa/state-information-center/" target="_blank">About State Information Center</a></li>
+          </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="javascript:void(0);" onclick="zE.activate({hideOnClose: false});">State Information Live Chat</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://faqs.in.gov/hc/en-us/requests/new" target="_blank">Email State Information Center</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="tel:1-800-457-8283">Call: 1-800-457-8283</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="sms:1-855-463-5292">Text: 1-855-463-5292</a></li>
+        </ul>
+       </div>   
+      </div>
+
+      <div class="footer-col-wrapper">
+        <div class="footer-col">
+          <h2>Web Tools</h2>
+          <ul>
+            <li><a href="#" target="_blank">Accessibility Settings</a></li>
+          </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="#" target="_blank">Screen Reader-Speak</a></li>
+        </ul>
+       </div>   
+       <div class="footer-col">
+        <ul>
+          <li><a href="https://www.in.gov/core/accessibility-feedback.html" target="_blank">Report
+            Accessibility Issues</a></li>
+        </ul>
+       </div>     
+      </div>
+    </footer>
+
+
+    <script src="lib/jquery-3.7.1.min.js"></script>
+    <script type="module" src="app/app.js"></script>
+    <script type="module" src="../src/index.js"></script>
+    <script type="module" src="../src/model.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.6.0/dist/sweetalert2.min.js"></script>
+</body>
+</html>

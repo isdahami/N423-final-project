@@ -1,0 +1,132 @@
+.signup-container {
+  width: 100%;
+
+  .form-wrapper {
+    margin: 3rem auto;
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #fff;
+    padding: 34px;
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
+    z-index: 99;
+
+    h2 {
+      font-family: "DM Sans", sans-serif;
+      position: relative;
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    form .input-box {
+      height: 52px;
+      margin: 18px 0;
+
+      input {
+        height: 100%;
+        width: 100%;
+        outline: none;
+        padding: 0 15px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        color: #333;
+        border: 1.5px solid #c7bebe;
+        border-bottom-width: 2.5px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+    }
+
+    form .input-box input:focus,
+    form .input-box input:valid {
+      border-color: #0b3f09;
+    }
+
+    h3 {
+      color: #707070;
+      font-family: "DM Sans", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
+    .input-box.button input {
+      color: #fff;
+      letter-spacing: 1px;
+      border: none;
+      background: #4a6741;
+      cursor: pointer;
+    }
+
+    .input-box.button input:hover {
+      background: #0b3f09;
+    }
+
+    form .text h3 {
+      color: #333;
+      width: 100%;
+      text-align: center;
+
+      a {
+        color: #4a6741;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .signup-img-wrapper {
+    position: relative;
+    top: 5px;
+    height: 100%;
+    width: 100%;
+
+    .img-container {
+      width: 100%;
+      position: absolute;
+      bottom: 1px;
+
+      img {
+        width: 100%;
+        height: auto;
+        opacity: 0.4;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .signup-container {
+    // width: 75%;
+    // margin: 0 auto;
+    .form-wrapper {
+      width: 70%;
+
+      form .input-box {
+        height: 52px;
+        margin: 18px 0;
+
+        input {
+          height: 100%;
+          width: 100%;
+          outline: none;
+          padding: 0 15px;
+          font-family: "DM Sans", sans-serif;
+          font-size: 12px;
+          font-weight: 400;
+          color: #333;
+          border: 1.5px solid #c7bebe;
+          border-bottom-width: 2.5px;
+          border-radius: 6px;
+          transition: all 0.3s ease;
+        }
+      }
+    }
+  }
+}
