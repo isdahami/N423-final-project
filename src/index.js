@@ -5,10 +5,22 @@ function route() {
   let hashTag = window.location.hash;
   /* Removing the hash tag from the URL. */
   let pageID = hashTag.replace("#", "");
+  let parkID = pageID.split("?");
+
+  console.log("page id ", pageID, "park id ", parkID);
+
+  if (parkID[0] == "parksPage") {
+    console.log("parksPage");
+    pageID = parkID[0];
+    parkID = parkID[1];
+  }
 
   /* This is a conditional statement. If the pageID is empty, then the page will be changed to the home page. If the pageID is not empty, then the page will be changed to the pageID. */
   if (pageID == "") {
     MODEL.changePage("home");
+  } else if (pageID == "parksPage") {
+    // You will need to add a var in the changePage function to acount for the id of the park. Or store it in a global variable.
+    MODEL.changePage(pageID, parkID);
   } else {
     MODEL.changePage(pageID);
   }

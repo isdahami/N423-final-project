@@ -9,6 +9,7 @@ import {
   doc,
   where,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -38,6 +39,8 @@ onAuthStateChanged(auth, async (user) => {
       // User found in the collection
       const userData = userSnapshot.docs[0].data();
       updateUI(user, userData);
+      // Call displayProfileData when user is signed in
+      displayProfileData(user);
     } else {
       // User not found in the collection, handle it as needed
       console.log("User not found in the collection");
@@ -48,12 +51,129 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+async function displayProfileData(user) {
+  if (user) {
+    // Fetch user information from Firestore using UID
+    const usersCollection = collection(db, "Users");
+    const userQuery = query(usersCollection, where("uid", "==", user.uid));
+
+    try {
+      const userSnapshot = await getDocs(userQuery);
+
+      console.log("User Snapshot:", userSnapshot.docs);
+
+      if (!userSnapshot.empty) {
+        // User data found in the collection
+        const userData = userSnapshot.docs[0].data();
+        updateProfilePage(userData);
+      } else {
+        // User data not found in the collection, handle it as needed
+        console.log("User data not found in the collection");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  } else {
+    // User not found in the collection, handle it as needed
+    console.log("User not signed in");
+  }
+}
+function updateProfilePage(userData) {
+  const profileDisplayUser = document.querySelector(".profile-display-user");
+
+  if (profileDisplayUser) {
+    profileDisplayUser.innerHTML = `
+      <div>
+        <h3 class="profile-userName-txt">${userData.firstName}'s Profile</h3>
+        <p><strong class="profile-strong">First Name:</strong> <span class="first-name">${userData.firstName}</span></p>
+        <p><strong class="profile-strong">Last Name:</strong> <span class="last-name">${userData.lastName}</span></p>
+        <p><strong class="profile-strong">Email:</strong> <span class="email">${userData.email}</span></p>
+      </div>
+      <button id="editInfoBtn">Edit Info</button>
+      <button id="updateInfoBtn" style="display:none;">Update Info</button>
+    `;
+
+    // Add event listeners for the buttons
+    const editInfoBtn = document.getElementById("editInfoBtn");
+    const updateInfoBtn = document.getElementById("updateInfoBtn");
+
+    editInfoBtn.addEventListener("click", () => {
+      // Enable form fields for editing
+      enableEditFields();
+    });
+
+    updateInfoBtn.addEventListener("click", () => {
+      // Call a function to update the user information in Firebase
+      updateUserInfoInFirebase();
+    });
+  } else {
+    console.error("Profile display user element not found");
+  }
+}
+
+function enableEditFields() {
+  // Enable input fields for editing
+  const firstNameInput = document.querySelector(".first-name");
+  const lastNameInput = document.querySelector(".last-name");
+
+  // Assuming you have input fields with the class "edit-field"
+  firstNameInput.innerHTML = `<input type="text" class="edit-field" value="${firstNameInput.textContent}">`;
+  lastNameInput.innerHTML = `<input type="text" class="edit-field" value="${lastNameInput.textContent}">`;
+
+  // Show the "Update Info" button
+  document.getElementById("updateInfoBtn").style.display = "block";
+}
+
+function updateUserInfoInFirebase() {
+  const firstNameInput = document.querySelector(".first-name input");
+  const lastNameInput = document.querySelector(".last-name input");
+
+  const newFirstName = firstNameInput.value;
+  const newLastName = lastNameInput.value;
+
+  // Assuming the user object is already available
+  const user = auth.currentUser;
+
+  // Update user information in Firestore
+  const usersCollection = collection(db, "Users");
+  const userQuery = query(usersCollection, where("uid", "==", user.uid));
+
+  getDocs(userQuery)
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const docId = querySnapshot.docs[0].id;
+        const userDocRef = doc(usersCollection, docId);
+
+        return updateDoc(userDocRef, {
+          firstName: newFirstName,
+          lastName: newLastName,
+        });
+      }
+    })
+    .then(() => {
+      // Successfully updated user information
+      console.log("User information updated successfully");
+      // Refresh the profile page to display the updated information
+      displayProfileData(user);
+      Swal.fire({
+        title: "Account Updated!",
+        text: "Your account has been successfully updated.",
+        icon: "success",
+      });
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Error updating user information:", error);
+    });
+}
+
 // Function to update UI based on user authentication status and data
 function updateUI(user, userData) {
   const userProfile = document.getElementById("userProfile");
   const userName = document.getElementById("userName");
   const logoutBtn = document.getElementById("logoutBtn");
   const loginSignupLinks = document.getElementById("loginSignupLinks");
+  const profileTab = document.getElementById("profileTab");
 
   if (user) {
     // User is signed in
@@ -80,11 +200,17 @@ function updateUI(user, userData) {
         });
     });
     loginSignupLinks.style.display = "none";
+
+    // Show the "Profile" tab in the navigation
+    profileTab.style.display = "inline";
   } else {
     // User is not signed in
     userProfile.style.display = "none";
     loginSignupLinks.style.display = "block";
     userName.style.display = "none";
+
+    // Hide the "Profile" tab in the navigation
+    profileTab.style.display = "none";
   }
 }
 
@@ -234,10 +360,9 @@ async function displayParkCards() {
       <div class="card-content">
         <h3>${doc.data().parkName}</h3>
         <p>${doc.data().parkLocation}</p>
-        <button class="park" id=${doc.id}Find out more</button>
-        <a id="${doc.id}" href="#parksPage" class="findMore-btn">
-          Find out more
-        </a>
+        <a id="${doc.id}" href="#parksPage?${doc.id}" class="findMore-btn">
+      Find out more
+    </a>
       </div>
     `;
 
@@ -245,41 +370,55 @@ async function displayParkCards() {
   });
 }
 
-// document.querySelector(".park").addEventListener("click", (e) => {
-//   console.log("parks btn");
-// });
-
-async function queryParkPageDisplay(docId) {
+async function queryParkPageDisplay(parkId) {
+  console.log("Received parkId:", parkId);
   // Use document.querySelector to get the DOM element
   let parksPage = document.querySelector(".parks-page-display");
 
   if (parksPage) {
-    const q = query(collection(db, "Parks"));
+    const parkRef = doc(db, "Parks", parkId);
 
-    console.log("Firestore Query:", q);
+    console.log("Firestore Document Reference:", parkRef);
 
     try {
-      // Execute the Firestore query and get a query snapshot
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.docs.length > 0) {
-        // If matching parks are found, iterate over the query snapshot
-        querySnapshot.forEach((doc) => {
-          // Create a park div element and apply styling
-          const parkDiv = document.createElement("div");
-          parkDiv.classList.add("parkDiv");
+      // Get the document snapshot
+      const docSnapshot = await getDoc(parkRef);
 
-          // Add park details to the park div
-          parkDiv.innerHTML += `
-            <span class="parkName">${doc.data().parkName}</span>
-            <span class="parkLocation">${doc.data().parkLocation}</span>
-          `;
+      if (docSnapshot.exists()) {
+        // If the park document exists, retrieve the data
+        const parkData = docSnapshot.data();
 
-          // Append the park div to the parksPage container
-          parksPage.appendChild(parkDiv);
-        });
+        // Create a park div element and apply styling
+        const parkDiv = document.createElement("div");
+        parkDiv.classList.add("parkDiv");
+
+        const parkImgDiv = document.createElement("div");
+        parkDiv.classList.add("parkImgDiv");
+
+        // park img element
+        const parkImgElement = document.createElement("img");
+        parkImgElement.className = "parkImgElement";
+
+        parkImgElement.src = parkData.parkImage;
+
+        parkImgElement.alt = "Park Image";
+
+        parkImgDiv.appendChild(parkImgElement);
+
+        // Add park details to the park div
+        parkDiv.innerHTML += `
+          <span class="parkName">${parkData.parkName}</span>
+          <span class="parkLocation">${parkData.parkLocation}</span>
+          <span class="parkDesc">${parkData.parkDesc}</span>
+          <button class="parkBtn"><a href="#reservation">Make a Reservation</a></button>
+        `;
+
+        // Append the park div to the parksPage container
+        parksPage.appendChild(parkDiv);
+        parksPage.appendChild(parkImgDiv);
       } else {
-        // If no matching parks are found
-        console.log("No matching parks found");
+        // If the park document doesn't exist
+        console.log("Park document not found");
       }
     } catch (error) {
       // Handle any errors that occur during the Firestore query
@@ -292,7 +431,7 @@ async function queryParkPageDisplay(docId) {
  * It gets the pageId.html file and then puts the data into the app div
  * pageId - This is the id of the page that you want to change to.
  */
-export function changePage(pageId) {
+export function changePage(pageId, parkId) {
   console.log("model ", pageId);
   /* Using the jQuery get method to get the pageId.html file and then it is using the jQuery html
     method to put the data into the app div. */
@@ -304,10 +443,17 @@ export function changePage(pageId) {
     if (mapContainer.length) {
       interactiveMap();
     }
+
+    // If the pageId is "parksPage," you can use the parkId parameter as needed.
+    if (pageId === "parksPage") {
+      queryParkPageDisplay(parkId);
+    }
+
     displayParkCards();
     queryParkPageDisplay();
     createUser();
     loginUser();
+    displayProfileData(auth.currentUser);
     showSlides();
   })
     .done(function () {

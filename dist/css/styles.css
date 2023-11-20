@@ -230,7 +230,7 @@ p {
 }
 .home-container .home-hero-wrapper .home-hero-left .home-hero-left-txt .home-btn {
   background-color: initial;
-  background-image: linear-gradient(-180deg, #0b3f09, #0b3f09);
+  background-image: linear-gradient(-180deg, #4a6741, #4a6741);
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
   color: #ffffff;
@@ -254,8 +254,12 @@ p {
   z-index: 9;
   border: 0;
 }
+.home-container .home-hero-wrapper .home-hero-left .home-hero-left-txt .home-btn a {
+  text-decoration: none;
+  color: #ffffff;
+}
 .home-container .home-hero-wrapper .home-hero-left .home-hero-left-txt .home-btn:hover {
-  background: #032918;
+  background: #0b3f09;
 }
 .home-container .home-hero-wrapper .home-hero-right {
   width: 50%;
@@ -538,6 +542,117 @@ p {
     gap: 2rem;
   }
 }
+.parks-page-container {
+  min-height: 100%;
+  width: 100%;
+  padding: 2rem 2rem;
+}
+.parks-page-container .parks-page-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.parks-page-container .parks-page-display .parkDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 50%;
+}
+.parks-page-container .parks-page-display .parkDiv .parkName {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 2rem;
+  padding: 1rem 0;
+}
+.parks-page-container .parks-page-display .parkDiv .parkLocation {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.3rem;
+  padding: 1rem 0;
+}
+.parks-page-container .parks-page-display .parkDiv .parkDesc {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  padding: 1rem 0;
+}
+.parks-page-container .parks-page-display .parkDiv .parkBtn {
+  background-color: initial;
+  background-image: linear-gradient(-180deg, #4a6741, #4a6741);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "DM Sans", sans-serif;
+  height: 44px;
+  line-height: 44px;
+  outline: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: top;
+  white-space: nowrap;
+  width: 50%;
+  z-index: 9;
+  border: 0;
+}
+.parks-page-container .parks-page-display .parkDiv .parkBtn a {
+  text-decoration: none;
+  color: #ffffff;
+}
+.parks-page-container .parks-page-display .parkDiv .parkBtn:hover {
+  background: #0b3f09;
+}
+.parks-page-container .parks-page-display .parkImgElement {
+  min-height: 320px;
+  width: 500px;
+}
+
+.profile-container {
+  height: 100%;
+  width: 100%;
+}
+.profile-container .profile-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 5rem 5rem;
+  background-color: orange;
+}
+.profile-container .profile-content-wrapper .profile-display-user {
+  flex-direction: column;
+  width: 50%;
+  padding: 1rem 1rem;
+  background-color: plum;
+}
+.profile-container .profile-content-wrapper .profile-display-user .profile-userName-txt {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.profile-container .profile-content-wrapper .profile-display-user .profile-strong {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.profile-container .profile-content-wrapper .profile-display-user .first-name {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+}
+.profile-container .profile-content-wrapper .profile-display-user .last-name {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+}
+.profile-container .profile-content-wrapper .profile-display-user .email {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+}
+.profile-container .profile-content-wrapper .profile-display-reservation {
+  width: 50%;
+  padding: 1rem 1rem;
+  background-color: powderblue;
+}
+
 .signup-container {
   width: 100%;
 }

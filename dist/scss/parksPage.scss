@@ -1,0 +1,75 @@
+.parks-page-container {
+  min-height: 100%;
+  width: 100%;
+  //   background-color: palevioletred;
+  padding: 2rem 2rem;
+  .parks-page-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    .parkDiv {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      width: 50%;
+
+      //   background-color: blue;
+      .parkName {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 2rem;
+        padding: 1rem 0;
+      }
+      .parkLocation {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.3rem;
+        padding: 1rem 0;
+      }
+      .parkDesc {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1rem;
+        padding: 1rem 0;
+      }
+      .parkBtn {
+        background-color: initial;
+        background-image: linear-gradient(-180deg, #4a6741, #4a6741);
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "DM Sans", sans-serif;
+        height: 44px;
+        line-height: 44px;
+        outline: 0;
+        overflow: hidden;
+        padding: 0 20px;
+        pointer-events: auto;
+        position: relative;
+        text-align: center;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        vertical-align: top;
+        white-space: nowrap;
+        width: 50%;
+        z-index: 9;
+        border: 0;
+      }
+      .parkBtn a {
+        text-decoration: none;
+        color: #ffffff;
+      }
+
+      .parkBtn:hover {
+        background: #0b3f09;
+      }
+    }
+
+    .parkImgElement {
+      min-height: 320px;
+      width: 500px;
+    }
+  }
+}

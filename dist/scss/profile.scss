@@ -1,0 +1,40 @@
+.profile-container {
+  height: 100%;
+  width: 100%;
+  .profile-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 5rem 5rem;
+    background-color: orange;
+    .profile-display-user {
+      flex-direction: column;
+      width: 50%;
+      padding: 1rem 1rem;
+      background-color: plum;
+      .profile-userName-txt {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .profile-strong {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .first-name {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1rem;
+      }
+      .last-name {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1rem;
+      }
+      .email {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1rem;
+      }
+    }
+    .profile-display-reservation {
+      width: 50%;
+      padding: 1rem 1rem;
+      background-color: powderblue;
+    }
+  }
+}
