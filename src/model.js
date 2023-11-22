@@ -10,6 +10,7 @@ import {
   where,
   query,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -118,23 +119,39 @@ function updateReservationPage(reservationData) {
 
     if (reservationData.length > 0) {
       // User has reservations
-      const reservationList = document.createElement("ul");
+      const reservationList = document.createElement("div");
 
       reservationData.forEach((reservation) => {
-        const reservationItem = document.createElement("ul");
+        const reservationItem = document.createElement("div");
+        reservationItem.classList.add("profile-res-info");
         reservationItem.innerHTML = `
-        <p class="res-first-name"><strong></strong> ${reservation.firstName}'s Reservation</p>
+          <p class="res-first-name"><strong></strong> ${reservation.firstName}'s Reservation</p>
           <p class="park-name"><strong>Park:</strong> ${reservation.parkName}</p>
-          <p><strong>Name:</strong> ${reservation.firstName} ${reservation.lastName}</p>
+          <p class="resFirstName"><strong>Name:</strong> ${reservation.firstName} ${reservation.lastName}</p>
           <p><strong>Email:</strong> ${reservation.email}</p>
-          <p><strong>Date:</strong> ${reservation.reservationDate}</p>
-          <button id="editResInfo">Edit Info</button>
-          <button id="updateResBtn" style="display:none;">Update Info</button>
+          <p class="res-date"><strong>Date:</strong> ${reservation.reservationDate}</p>
+          <button class="edit-reservation-btn">Edit Info</button>
+          <button class="update-reservation-btn" style="display:none;">Update Info</button>
+          <button class="delete-reservation-btn">Delete</button>
         `;
         reservationList.appendChild(reservationItem);
       });
 
       profileDisplayReservation.appendChild(reservationList);
+
+      // Add event listeners for "Edit" and "Update" buttons
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        const reservationItem = target.closest(".profile-res-info");
+
+        if (target.classList.contains("edit-reservation-btn")) {
+          enableEditReservationFields(reservationItem);
+        } else if (target.classList.contains("update-reservation-btn")) {
+          updateReservationInFirebase(reservationItem);
+        } else if (target.classList.contains("delete-reservation-btn")) {
+          deleteReservationInFirebase(reservationItem);
+        }
+      });
     } else {
       // User has no reservations
       profileDisplayReservation.innerHTML = "User has no reservations.";
@@ -143,6 +160,139 @@ function updateReservationPage(reservationData) {
     console.error("Profile display reservation element not found");
   }
 }
+
+function enableEditReservationFields(reservationItem) {
+  // Enable input fields for editing reservation
+
+  const resDateInput = reservationItem.querySelector(".res-date");
+  const parkNameInput = reservationItem.querySelector(".park-name");
+
+  // Save the current values
+
+  const currentDate = resDateInput.textContent.trim();
+  const currentParkName = parkNameInput.textContent.trim();
+
+  // Create input fields for editing
+
+  resDateInput.innerHTML = `<input type="date" class="edit-field" value="${currentDate}">`;
+
+  // Enable dropdown for editing park name
+  const parkDropdown = document.createElement("select");
+
+  // Populate the dropdown options
+  parkDropdown.innerHTML = `
+  <option value="Prophetstown">Prophetstown State Park</option>
+  <option value="Mounds">Mounds State Park</option>
+  <option value="Lincoln">Lincoln State Park</option>
+  <option value="Versailles">Versailles State Park</option>
+  <option value="Pokagon">Pokagon State Park</option>
+  <option value="Indiana Dunes">Indiana Dunes State Park</option>
+  <option value="Turkey Run">Turkey Run State Park</option>
+  <option value="McCormicks Creek">McCormick's Creek State Park</option>
+  <option value="Brown County">Brown County State Park</option>
+  <option value="Clifty Falls">Clifty Falls State Park</option>
+  <option value="Shades">Shades State Park</option>
+  <option value="Fort Harrison">Fort Harrison State Park</option>
+  <option value="Lincoln">Lincoln State Park</option>
+  <option value="Ouabache">Ouabache State Park</option>
+  <option value="ChainOLakes">Chain O'Lakes State Park</option>
+  <option value="Mounds">Mounds State Park</option>
+  <option value="Summit Lake">Summit Lake State Park</option>
+  <option value="Whitewater Memorial">Whitewater Memorial State Park</option>
+  <option value="SpringMill">Spring Mill State Park</option>
+  <option value="Charlestown">Charlestown State Park</option>
+  <option value="Falls Of The Ohio">Falls of the Ohio State Park</option>
+  <option value="Obannon Woods">O'Bannon Woods State Park</option>
+  <option value="Potato Creek">Potato Creek State Park</option>
+  <option value="Shakamak">Shakamak State Park</option>
+  <option value="Tippecanoe River">Tippecanoe River State Park</option>
+  <option value="White River">White River State Park</option>
+  `;
+
+  // Set the selected option based on the current park name
+  parkDropdown.value = currentParkName;
+
+  // Replace the content with the dropdown
+  parkNameInput.innerHTML = "";
+  parkNameInput.appendChild(parkDropdown);
+
+  // Show the "Update Info" button
+  reservationItem.querySelector(".update-reservation-btn").style.display =
+    "block";
+}
+
+function updateReservationInFirebase(reservationItem) {
+  // Get the updated values from the input fields
+
+  const updatedParkName =
+    reservationItem.querySelector(".park-name select").value;
+  const updatedDate = reservationItem.querySelector(".res-date input").value;
+
+  // Update reservation information in Firestore
+  const uid = auth.currentUser.uid;
+
+  const reservationsCollection = collection(db, "Reservations");
+  const reservationQuery = query(
+    reservationsCollection,
+    where("uid", "==", uid)
+  );
+
+  getDocs(reservationQuery)
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const docId = querySnapshot.docs[0].id;
+        const reservationRef = doc(reservationsCollection, docId);
+
+        return updateDoc(reservationRef, {
+          parkName: updatedParkName,
+          reservationDate: updatedDate,
+          // Update more fields as needed
+        });
+      }
+    })
+    .then(() => {
+      // Handle success, e.g., show a confirmation message
+      console.log("Reservation updated successfully");
+      displayProfileData(auth.currentUser); // Refresh the profile page
+    })
+    .catch((error) => {
+      // Handle errors, e.g., show an error message to the user
+      console.error("Error updating reservation:", error);
+    });
+}
+
+function deleteReservationInFirebase(reservationItem) {
+  // Get the user UID from the authenticated user
+  const userUid = auth.currentUser.uid;
+
+  // Delete reservation document from Firestore based on user UID
+  const reservationsCollection = collection(db, "Reservations");
+  const reservationQuery = query(
+    reservationsCollection,
+    where("uid", "==", userUid)
+  );
+
+  // Assuming there's only one reservation per user, you can fetch and delete it directly
+  getDocs(reservationQuery)
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const reservationDoc = querySnapshot.docs[0];
+        return deleteDoc(reservationDoc.ref);
+      } else {
+        console.log("No reservations found for the user");
+      }
+    })
+    .then(() => {
+      // Handle success, e.g., show a confirmation message
+      console.log("Reservation deleted successfully");
+      displayProfileData(auth.currentUser); // Refresh the profile page
+    })
+    .catch((error) => {
+      // Handle errors, e.g., show an error message to the user
+      console.error("Error deleting reservation:", error);
+    });
+}
+
 function updateProfilePage(userData) {
   const profileDisplayUser = document.querySelector(".profile-display-user");
 
@@ -164,7 +314,7 @@ function updateProfilePage(userData) {
 
     editInfoBtn.addEventListener("click", () => {
       // Enable form fields for editing
-      enableEditFields();
+      enableEditUserFields();
     });
 
     updateInfoBtn.addEventListener("click", () => {
@@ -176,7 +326,7 @@ function updateProfilePage(userData) {
   }
 }
 
-function enableEditFields() {
+function enableEditUserFields() {
   // Enable input fields for editing
   const firstNameInput = document.querySelector(".first-name");
   const lastNameInput = document.querySelector(".last-name");
