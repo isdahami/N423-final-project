@@ -73,3 +73,66 @@
     }
   }
 }
+
+@media screen and (max-width: 1192px) {
+  .parks-page-container {
+    padding: 2rem 2rem;
+    .parks-page-display {
+      display: flex;
+      flex-direction: column;
+
+      .parkDiv {
+        .parkBtn {
+          margin-top: 2rem;
+        }
+      }
+
+      .parkImgElement {
+        margin-top: 2rem;
+      }
+    }
+  }
+}
+@media screen and (max-width: 872px) {
+  .parks-page-container {
+    padding: 2rem 2rem;
+    .parks-page-display {
+      display: flex;
+      flex-direction: column;
+
+      .parkDiv {
+        .parkBtn {
+          width: 200px;
+        }
+        .parkDesc {
+          width: 450px;
+        }
+      }
+
+      .parkImgElement {
+        margin-top: 2rem;
+      }
+    }
+  }
+}
+@media screen and (max-width: 572px) {
+  .parks-page-container {
+    .parks-page-display {
+      display: flex;
+      flex-direction: column;
+
+      .parkDiv {
+        .parkBtn {
+          width: 200px;
+        }
+        .parkDesc {
+          width: 400px;
+        }
+      }
+
+      .parkImgElement {
+        padding: 2rem 2rem;
+      }
+    }
+  }
+}

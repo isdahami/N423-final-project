@@ -66,6 +66,9 @@ async function displayProfileData(user) {
         // User data found in the collection
         const userData = userSnapshot.docs[0].data();
         updateProfilePage(userData);
+
+        // Call function to display reservation data
+        displayReservationData(user.uid);
       } else {
         // User data not found in the collection, handle it as needed
         console.log("User data not found in the collection");
@@ -76,6 +79,68 @@ async function displayProfileData(user) {
   } else {
     // User not found in the collection, handle it as needed
     console.log("User not signed in");
+  }
+}
+async function displayReservationData(uid) {
+  const reservationsCollection = collection(db, "Reservations");
+  const reservationQuery = query(
+    reservationsCollection,
+    where("uid", "==", uid)
+  );
+
+  try {
+    const reservationSnapshot = await getDocs(reservationQuery);
+
+    console.log("Reservation Snapshot:", reservationSnapshot.docs);
+
+    if (!reservationSnapshot.empty) {
+      // Reservations found for the user
+      const reservationData = reservationSnapshot.docs.map((doc) => doc.data());
+      updateReservationPage(reservationData);
+    } else {
+      // No reservations found for the user
+      console.log("No reservations found for the user");
+      updateReservationPage([]);
+    }
+  } catch (error) {
+    console.error("Error fetching reservation data:", error);
+  }
+}
+
+function updateReservationPage(reservationData) {
+  const profileDisplayReservation = document.querySelector(
+    ".profile-display-reservation"
+  );
+
+  if (profileDisplayReservation) {
+    // Clear existing content
+    profileDisplayReservation.innerHTML = "";
+
+    if (reservationData.length > 0) {
+      // User has reservations
+      const reservationList = document.createElement("ul");
+
+      reservationData.forEach((reservation) => {
+        const reservationItem = document.createElement("ul");
+        reservationItem.innerHTML = `
+        <p class="res-first-name"><strong></strong> ${reservation.firstName}'s Reservation</p>
+          <p class="park-name"><strong>Park:</strong> ${reservation.parkName}</p>
+          <p><strong>Name:</strong> ${reservation.firstName} ${reservation.lastName}</p>
+          <p><strong>Email:</strong> ${reservation.email}</p>
+          <p><strong>Date:</strong> ${reservation.reservationDate}</p>
+          <button id="editResInfo">Edit Info</button>
+          <button id="updateResBtn" style="display:none;">Update Info</button>
+        `;
+        reservationList.appendChild(reservationItem);
+      });
+
+      profileDisplayReservation.appendChild(reservationList);
+    } else {
+      // User has no reservations
+      profileDisplayReservation.innerHTML = "User has no reservations.";
+    }
+  } else {
+    console.error("Profile display reservation element not found");
   }
 }
 function updateProfilePage(userData) {
@@ -165,6 +230,51 @@ function updateUserInfoInFirebase() {
       // Handle errors
       console.error("Error updating user information:", error);
     });
+}
+
+function getUserReservationInfo() {
+  $("#resBtn").on("click", (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    console.log("Reservation button clicked");
+
+    // retrieve values
+    let selectedPark = $("#stateParks").val();
+    let firstName = $("#fNameR").val();
+    let lastName = $("#lNameR").val();
+    let email = $("#emailR").val();
+    let reservationDate = $("#dateR").val();
+
+    console.log("Selected Park:", selectedPark);
+    console.log("First Name:", firstName);
+    console.log("Last Name:", lastName);
+    console.log("Email:", email);
+    console.log("Reservation Date:", reservationDate);
+
+    const reservationsCollection = collection(db, "Reservations");
+    addDoc(reservationsCollection, {
+      parkName: selectedPark,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      reservationDate: reservationDate,
+      uid: auth.currentUser.uid,
+    })
+      .then(() => {
+        // Handle success, e.g., show a confirmation message
+        console.log("Reservation saved successfully");
+        Swal.fire({
+          title: "Reservation Complete!",
+          text: "You have successfully made a reservation. You can view it under the profile page.",
+          icon: "success",
+        });
+        changePage("home");
+      })
+      .catch((error) => {
+        // Handle errors, e.g., show an error message to the user
+        console.error("Error saving reservation:", error);
+      });
+  });
 }
 
 // Function to update UI based on user authentication status and data
@@ -453,6 +563,7 @@ export function changePage(pageId, parkId) {
     queryParkPageDisplay();
     createUser();
     loginUser();
+    getUserReservationInfo();
     displayProfileData(auth.currentUser);
     showSlides();
   })
