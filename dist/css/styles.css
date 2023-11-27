@@ -358,11 +358,70 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  padding: 4rem 0;
 }
 .home-container .home-newsletter .home-news-left {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 50%;
 }
+.home-container .home-newsletter .home-news-left .news-img {
+  width: 400px;
+  height: 320px;
+}
+.home-container .home-newsletter .home-news-right {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  width: 50%;
+}
+.home-container .home-newsletter .home-news-right .news-head-txt {
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.5rem;
+  padding: 1rem 0;
+}
+.home-container .home-newsletter .home-news-right .news-body-txt {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  padding: 2rem 0;
+  width: 75%;
+}
+.home-container .home-newsletter .home-news-right .home-btn {
+  background-color: initial;
+  background-image: linear-gradient(-180deg, #4a6741, #4a6741);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "DM Sans", sans-serif;
+  height: 44px;
+  line-height: 44px;
+  outline: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: top;
+  white-space: nowrap;
+  width: 50%;
+  z-index: 9;
+  border: 0;
+}
+.home-container .home-newsletter .home-news-right .home-btn a {
+  text-decoration: none;
+  color: #ffffff;
+}
+.home-container .home-newsletter .home-news-right .home-btn:hover {
+  background: #0b3f09;
+}
+
 @media screen and (max-width: 900px) {
   .home-container .home-hero-wrapper {
     flex-direction: column;
@@ -599,7 +658,7 @@ p {
 .parks-page-container {
   min-height: 100%;
   width: 100%;
-  padding: 2rem 2rem;
+  margin: 5rem 0;
 }
 .parks-page-container .parks-page-display {
   display: flex;
@@ -665,10 +724,146 @@ p {
   min-height: 320px;
   width: 500px;
 }
+.parks-page-container .parks-content-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  min-height: 100%;
+  width: 100%;
+  margin: 3rem 0;
+  padding: 1.2rem 0;
+  background-color: #4a6741;
+  cursor: pointer;
+}
+.parks-page-container .parks-content-bar .parks-box-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  padding: 2rem 0;
+  width: 200px;
+  background-color: #0b3f09;
+  border-radius: 8px;
+}
+.parks-page-container .parks-content-bar .parks-box-bar .parks-box-txt {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+.parks-page-container .parks-content-bar .parks-box-bar .fa-solid {
+  color: #fff;
+  margin-top: 1rem;
+}
+.parks-page-container .parks-content-bar .parks-box-bar:hover {
+  border-top: solid 0.5rem #fefefe;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.5);
+  transform: scale(1.1);
+}
+.parks-page-container .parks-review {
+  min-height: 100%;
+  width: 100%;
+}
+.parks-page-container .parks-review .parks-review-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.parks-page-container .parks-review .parks-review-wrapper .review-head-txt {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+.parks-page-container .parks-review .parks-review-wrapper .parks-review-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card {
+  width: 25%;
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #0b3f09;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 2rem;
+}
+.parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-review {
+  margin-top: 10px;
+}
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section {
+  width: 50%;
+  background-color: #fff;
+  padding: 1.5rem 1.5rem;
+  margin-top: 30px;
+  border: 1px solid #0b3f09;
+  border-radius: 10px;
+}
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section .write-head-txt {
+  font-size: 1.2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 1rem 0;
+}
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section form {
+  display: flex;
+  flex-direction: column;
+}
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section form label {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section form input,
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section form textarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  resize: none;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section form button {
+  background-color: #4a6741;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.parks-page-container .parks-review .parks-review-wrapper .write-review-section form button:hover {
+  background-color: #0b3f09;
+}
+.parks-page-container .signup-img-wrapper {
+  position: relative;
+  top: 85px;
+  height: 100%;
+  width: 100%;
+  z-index: -999;
+}
+.parks-page-container .signup-img-wrapper .img-container {
+  width: 100%;
+  position: absolute;
+  bottom: 1px;
+}
+.parks-page-container .signup-img-wrapper .img-container img {
+  width: 100%;
+  height: auto;
+  opacity: 0.4;
+}
 
 @media screen and (max-width: 1192px) {
   .parks-page-container {
-    padding: 2rem 2rem;
+    margin: 2rem 0;
   }
   .parks-page-container .parks-page-display {
     display: flex;
@@ -680,11 +875,32 @@ p {
   .parks-page-container .parks-page-display .parkImgElement {
     margin-top: 2rem;
   }
+  .parks-page-container .parks-content-bar {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .parks-page-container .parks-content-bar .parks-box-bar {
+    margin: 1rem;
+  }
+  .parks-page-container .parks-review .parks-review-wrapper .parks-review-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card {
+    margin: 1rem 0;
+    width: 50%;
+  }
+  .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-name {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-review {
+    margin-top: 10px;
+  }
 }
 @media screen and (max-width: 872px) {
-  .parks-page-container {
-    padding: 2rem 2rem;
-  }
   .parks-page-container .parks-page-display {
     display: flex;
     flex-direction: column;
@@ -815,6 +1031,7 @@ p {
   align-items: center;
   justify-content: space-evenly;
   padding: 6.2rem 5rem;
+  margin: 5rem;
 }
 .profile-container .profile-content-wrapper .profile-display-user {
   display: flex;
