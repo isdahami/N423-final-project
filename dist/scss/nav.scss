@@ -63,6 +63,9 @@ $button-text-color: white;
       }
     }
     #logoutBtn {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.5rem;
+
       background-color: #0b3f09;
       color: $button-text-color;
       padding: 10px 20px;
@@ -73,6 +76,7 @@ $button-text-color: white;
     #logoutBtn:hover {
       text-decoration: underline;
       color: #fff;
+      cursor: pointer;
     }
 
     #userName {
@@ -180,7 +184,7 @@ $button-text-color: white;
       background-color: #4a6741;
       padding: 20px;
       transition: all 0.3s ease-in-out;
-      z-index: 999;
+      z-index: 9999;
 
       a {
         display: block;
@@ -190,6 +194,10 @@ $button-text-color: white;
 
       a:hover {
         border-bottom: 0px solid #fff;
+      }
+
+      #logoutBtn {
+        margin: 0.3rem 0;
       }
     }
 

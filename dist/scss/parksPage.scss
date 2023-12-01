@@ -128,6 +128,7 @@
 
       .parks-review-display {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-evenly;
 
@@ -138,7 +139,7 @@
           border: 1px solid #0b3f09;
           border-radius: 8px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          margin: 0 2rem;
+          margin: 1rem 2rem;
           .user-name {
             font-weight: bold;
             font-size: 1.2rem;
@@ -256,13 +257,14 @@
         .parks-review-display {
           display: flex;
           flex-direction: column;
-
+          flex-wrap: wrap;
           align-items: center;
           justify-content: space-evenly;
 
           .review-card {
             margin: 1rem 0;
             width: 50%;
+            background-color: #fff;
             .user-name {
               font-weight: bold;
               font-size: 1.2rem;

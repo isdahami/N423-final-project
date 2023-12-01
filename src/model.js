@@ -427,6 +427,202 @@ function getUserReservationInfo() {
   });
 }
 
+// ============================================================
+// Review Functions
+
+// Function to set up the event listener for review submissions
+function setupReviewFormListener(parkId) {
+  console.log("Setting up review form listener");
+
+  // Event listener for the form submission
+  $("#review-form").submit(function (e) {
+    e.preventDefault();
+
+    // Check if the user is signed in
+    const user = auth.currentUser;
+    if (!user) {
+      // If not signed in, prompt the user to sign in
+      Swal.fire({
+        title: "Sign In Required",
+        text: "You must be signed in to leave a review.",
+        icon: "error",
+      });
+      changePage("login");
+      return;
+    }
+
+    // Get values from the form
+    const userEmail = $("#user-name").val();
+    const userReview = $("#user-review").val();
+    const selectedParkName = parkId;
+
+    // Check if selectedParkName is defined
+    if (selectedParkName) {
+      const reviewsCollection = collection(db, "Reviews");
+
+      addDoc(reviewsCollection, {
+        userId: auth.currentUser.uid,
+        parkId: selectedParkName,
+        userEmail: userEmail,
+        reviewText: userReview,
+        status: "pending",
+      })
+        .then(() => {
+          Swal.fire({
+            title: "Review Successful",
+            text: "Your review has been recieved!",
+            icon: "success",
+          });
+          // Clear the form after successful submission
+          const reviewForm = document.querySelector(
+            ".write-review-section form"
+          );
+          reviewForm.reset();
+        })
+        .catch((error) => {
+          console.error("Error submitting review:", error);
+        });
+    } else {
+      console.error("Selected park is undefined");
+    }
+  });
+}
+
+// Function to display reviews
+function displayReviews(parkId) {
+  const reviewsDisplay = document.querySelector(".parks-review-display");
+
+  // Retrieve reviews from Firestore for the specified park and status 'approved'
+  const reviewsCollection = collection(db, "Reviews");
+  const reviewsQuery = query(
+    reviewsCollection,
+    where("parkId", "==", parkId),
+    where("status", "==", "approved")
+  );
+
+  getDocs(reviewsQuery)
+    .then((querySnapshot) => {
+      console.log("Number of approved reviews:", querySnapshot.size);
+      querySnapshot.forEach((doc) => {
+        const reviewData = doc.data();
+
+        // Create HTML elements for each review
+        const reviewCard = document.createElement("div");
+        reviewCard.classList.add("review-card");
+
+        const userName = document.createElement("span");
+        userName.classList.add("user-name");
+        userName.textContent = reviewData.userEmail; // Display user email for now
+
+        const userReview = document.createElement("p");
+        userReview.classList.add("user-review");
+        userReview.textContent = reviewData.reviewText;
+
+        // Append elements to the review card
+        reviewCard.appendChild(userName);
+        reviewCard.appendChild(userReview);
+
+        // Append the review card to the display
+        reviewsDisplay.appendChild(reviewCard);
+      });
+    })
+    .catch((error) => {
+      console.error("Error retrieving reviews:", error);
+    });
+}
+
+// Function to fetch and display admin reviews
+function fetchAndDisplayAdminReviews(parkId) {
+  const reviewsContainer = $(".reviews-admin-display");
+
+  // Fetch reviews from Firestore
+  const reviewsCollection = collection(db, "Reviews");
+  const reviewsQuery = query(
+    reviewsCollection,
+    where("status", "==", "pending")
+  );
+
+  getDocs(reviewsQuery)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const reviewData = doc.data();
+
+        // Create HTML elements for each review
+        const reviewItem = $("<div>").addClass("review-item");
+
+        // Add review data to the review item
+        reviewItem.html(`
+          <span class="user-name">${reviewData.userEmail}</span>
+          <p class="park-user-review">${reviewData.reviewText}</p>
+          <button class="approve-btn" data-review-id="${doc.id}">Approve</button>
+          <button class="deny-btn" data-review-id="${doc.id}">Deny</button>
+        `);
+
+        // Append the review item to the container
+        reviewsContainer.append(reviewItem);
+
+        // Add event listeners to the newly created buttons
+        reviewItem.find(".approve-btn").on("click", () => {
+          approveReview(doc.id, parkId);
+        });
+
+        reviewItem.find(".deny-btn").on("click", () => {
+          denyReview(doc.id);
+        });
+      });
+    })
+    .catch((error) => {
+      console.error("Error retrieving reviews:", error);
+    });
+}
+
+// Function to approve a review
+async function approveReview(reviewId, parkId) {
+  // Update the review status in Firestore
+  const reviewRef = doc(db, "Reviews", reviewId);
+  console.log("this is reviewId", reviewId);
+  // Update the status to 'approved'
+  updateDoc(reviewRef, {
+    status: "approved",
+  })
+    .then(() => {
+      Swal.fire({
+        title: "Review Approved!",
+        text: "The review has been approved and will now be public.",
+        icon: "success",
+      });
+      // Display the review on the state park page for everyone
+      displayReviews(parkId);
+    })
+    .catch((error) => {
+      console.error("Error approving review:", error);
+    });
+}
+
+// Function to deny a review
+async function denyReview(reviewId) {
+  try {
+    // Delete the review from Firestore
+    const reviewRef = doc(db, "Reviews", reviewId);
+    await deleteDoc(reviewRef);
+
+    // If denied, remove the corresponding review from the UI
+    const reviewElement = $(`.review-item[data-review-id="${reviewId}"]`);
+    reviewElement.remove();
+    console.log(`Review ${reviewId} denied and deleted`);
+    Swal.fire({
+      title: "Review Denied",
+      text: "The following review has been deleted.",
+      icon: "success",
+    });
+    // After removing, fetch and display the updated admin reviews
+    await fetchAndDisplayAdminReviews();
+  } catch (error) {
+    console.error("Error denying review:", error);
+  }
+}
+
+// ==============================================
 // Function to update UI based on user authentication status and data
 function updateUI(user, userData) {
   const userProfile = document.getElementById("userProfile");
@@ -434,6 +630,8 @@ function updateUI(user, userData) {
   const logoutBtn = document.getElementById("logoutBtn");
   const loginSignupLinks = document.getElementById("loginSignupLinks");
   const profileTab = document.getElementById("profileTab");
+  const reviewsTab = document.getElementById("reviewsTab");
+  const reviews = document.getElementById("reviews");
 
   if (user) {
     // User is signed in
@@ -442,6 +640,19 @@ function updateUI(user, userData) {
     userProfile.style.justifyContent = "center";
     userName.textContent = userData.firstName;
     userName.style.display = "inline";
+
+    // Check if the user is an admin
+    if (userData.role === "Admin") {
+      // Show the "Review" tab in the navigation
+      reviewsTab.style.display = "inline";
+      userProfile.style.display = "none";
+    } else {
+      // Hide the "Review" tab in the navigation
+      reviewsTab.style.display = "none";
+    }
+
+    logoutBtn.style.display = "inline"; // Display the logout button
+
     logoutBtn.addEventListener("click", () => {
       // Handle user logout
       signOut(auth)
@@ -471,6 +682,11 @@ function updateUI(user, userData) {
 
     // Hide the "Profile" tab in the navigation
     profileTab.style.display = "none";
+
+    // Hide the "Review" tab in the navigation
+    reviewsTab.style.display = "none";
+
+    logoutBtn.style.display = "none"; // Hide the logout button
   }
 }
 
@@ -703,19 +919,34 @@ export function changePage(pageId, parkId) {
     if (mapContainer.length) {
       interactiveMap();
     }
-
     // If the pageId is "parksPage," you can use the parkId parameter as needed.
     if (pageId === "parksPage") {
       queryParkPageDisplay(parkId);
+      // Pass the parkId to setupReviewFormListener
+      setupReviewFormListener(parkId);
+
+      displayReviews(parkId);
+    }
+    if (pageId === "home") {
+      showSlides();
+    }
+    if (pageId === "reviews") {
+      fetchAndDisplayAdminReviews();
+    }
+    if (pageId === "login") {
+      loginUser();
+    }
+    if (pageId === "signup") {
+      createUser();
+    }
+    if (pageId === "reservation") {
+      getUserReservationInfo();
     }
 
     displayParkCards();
-    queryParkPageDisplay();
-    createUser();
-    loginUser();
-    getUserReservationInfo();
     displayProfileData(auth.currentUser);
-    showSlides();
+    displayReviews();
+    queryParkPageDisplay();
   })
     .done(function () {
       // Successfully loaded the HTML.
