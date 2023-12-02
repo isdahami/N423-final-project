@@ -939,6 +939,7 @@ export function changePage(pageId, parkId) {
     }
     // If the pageId is "parksPage," you can use the parkId parameter as needed.
     if (pageId === "parksPage") {
+      window.scrollTo(0, 0);
       queryParkPageDisplay(parkId);
       // Pass the parkId to setupReviewFormListener
       setupReviewFormListener(parkId);
