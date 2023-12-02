@@ -327,7 +327,6 @@ p {
   justify-content: space-evenly;
   min-height: 100%;
   width: 100%;
-  margin: 3rem 0;
   padding: 1.2rem 0;
   background-color: #4a6741;
   cursor: pointer;
@@ -442,6 +441,14 @@ p {
   }
   .home-container .home-content-bar .home-box-bar {
     margin: 1rem;
+  }
+  .home-container .home-newsletter {
+    display: flex;
+    flex-direction: column;
+  }
+  .home-container .home-newsletter .home-news-right {
+    padding: 2rem 2rem;
+    width: 100%;
   }
 }
 @media only screen and (max-width: 300px) {
@@ -786,6 +793,7 @@ p {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
+  width: 100%;
 }
 .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card {
   width: 25%;
@@ -797,11 +805,13 @@ p {
   margin: 1rem 2rem;
 }
 .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-name {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   font-size: 1.2rem;
 }
 .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-review {
   margin-top: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .parks-page-container .parks-review .parks-review-wrapper .write-review-section {
   width: 50%;
@@ -890,6 +900,7 @@ p {
     margin: 1rem;
   }
   .parks-page-container .parks-review .parks-review-wrapper .parks-review-display {
+    width: 100%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -903,7 +914,8 @@ p {
   }
   .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-name {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    width: 25%;
   }
   .parks-page-container .parks-review .parks-review-wrapper .parks-review-display .review-card .user-review {
     margin-top: 10px;
@@ -1284,6 +1296,15 @@ p {
   z-index: -125;
 }
 
+@media screen and (max-width: 860px) {
+  .profile-container .profile-content-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-container .profile-content-wrapper .profile-display-user {
+    margin: 2rem 0;
+  }
+}
 .reviews-container {
   display: flex;
   flex-direction: column;

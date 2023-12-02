@@ -136,7 +136,7 @@
     justify-content: space-evenly;
     min-height: 100%;
     width: 100%;
-    margin: 3rem 0;
+    // margin: 2rem 0;
     padding: 1.2rem 0;
     background-color: #4a6741;
     cursor: pointer;
@@ -260,6 +260,17 @@
       flex-wrap: wrap;
       .home-box-bar {
         margin: 1rem;
+      }
+    }
+
+    .home-newsletter {
+      display: flex;
+      flex-direction: column;
+
+      .home-news-right {
+        // background-color: purple;
+        padding: 2rem 2rem;
+        width: 100%;
       }
     }
   }

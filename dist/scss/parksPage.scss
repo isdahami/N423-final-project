@@ -131,6 +131,7 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: space-evenly;
+        width: 100%;
 
         .review-card {
           width: 25%;
@@ -141,12 +142,14 @@
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           margin: 1rem 2rem;
           .user-name {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             font-weight: bold;
             font-size: 1.2rem;
           }
 
           .user-review {
             margin-top: 10px;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           }
         }
       }
@@ -255,6 +258,7 @@
     .parks-review {
       .parks-review-wrapper {
         .parks-review-display {
+          width: 100%;
           display: flex;
           flex-direction: column;
           flex-wrap: wrap;
@@ -267,7 +271,8 @@
             background-color: #fff;
             .user-name {
               font-weight: bold;
-              font-size: 1.2rem;
+              font-size: 1rem;
+              width: 25%;
             }
 
             .user-review {

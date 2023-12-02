@@ -267,3 +267,16 @@
     }
   }
 }
+
+@media screen and (max-width: 860px) {
+  .profile-container {
+    .profile-content-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      .profile-display-user {
+        margin: 2rem 0;
+      }
+    }
+  }
+}

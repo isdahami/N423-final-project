@@ -52,6 +52,75 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+async function createUser() {
+  $("#signUpBtn").on("click", async (e) => {
+    e.preventDefault();
+
+    // retrieve values
+    let fName = $("#fNameC").val();
+    let lName = $("#lNameC").val();
+    let email = $("#emailC").val();
+    let pw = $("#pwC").val();
+
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        pw
+      );
+
+      // Add user information to Firestore
+      const usersCollection = collection(db, "Users");
+
+      await addDoc(usersCollection, {
+        uid: userCredentials.user.uid,
+        firstName: fName,
+        lastName: lName,
+        email: email,
+      });
+
+      console.log("created ", userCredentials.user);
+
+      Swal.fire({
+        title: "Account Created",
+        text: "Your account has been successfully created.",
+        icon: "success",
+      }).then(() => {
+        changePage("home");
+      });
+    } catch (error) {
+      console.log("error", error.message);
+    }
+  });
+}
+
+async function loginUser() {
+  $("#loginBtn").on("click", (e) => {
+    e.preventDefault();
+
+    let email = $("#emailL").val();
+    let pw = $("#pwL").val();
+
+    signInWithEmailAndPassword(auth, email, pw)
+      .then((userCredentials) => {
+        Swal.fire({
+          title: "Logged In",
+          text: "You have successfully logged in.",
+          icon: "success",
+        }).then(() => {
+          changePage("home");
+        });
+        console.log("signed in", userCredentials.user);
+        // could query database here to bring back users info
+      })
+      .catch((error) => {
+        console.log("error", error.message);
+      });
+  });
+}
+
+// ====================================================================
+// Profile functions, displays users data and reservations
 async function displayProfileData(user) {
   if (user) {
     // Fetch user information from Firestore using UID
@@ -252,6 +321,11 @@ function updateReservationInFirebase(reservationItem) {
     })
     .then(() => {
       // Handle success, e.g., show a confirmation message
+      Swal.fire({
+        title: "Reservation Updated",
+        text: "Your reservation has been successfully updated.",
+        icon: "success",
+      });
       console.log("Reservation updated successfully");
       displayProfileData(auth.currentUser); // Refresh the profile page
     })
@@ -283,6 +357,11 @@ function deleteReservationInFirebase(reservationItem) {
       }
     })
     .then(() => {
+      Swal.fire({
+        title: "Reservation Deleted",
+        text: "Your reservation has been successfully deleted.",
+        icon: "success",
+      });
       // Handle success, e.g., show a confirmation message
       console.log("Reservation deleted successfully");
       displayProfileData(auth.currentUser); // Refresh the profile page
@@ -426,6 +505,7 @@ function getUserReservationInfo() {
       });
   });
 }
+// ========================================================================
 
 // ============================================================
 // Review Functions
@@ -623,6 +703,7 @@ async function denyReview(reviewId) {
 }
 
 // ==============================================
+
 // Function to update UI based on user authentication status and data
 function updateUI(user, userData) {
   const userProfile = document.getElementById("userProfile");
@@ -688,69 +769,6 @@ function updateUI(user, userData) {
 
     logoutBtn.style.display = "none"; // Hide the logout button
   }
-}
-
-function createUser() {
-  $("#signUpBtn").on("click", async (e) => {
-    // retrieve values
-    let fName = $("#fNameC").val();
-    let lName = $("#lNameC").val();
-    let email = $("#emailC").val();
-    let pw = $("#pwC").val();
-
-    try {
-      const userCredentials = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        pw
-      );
-
-      // Add user information to Firestore
-      const usersCollection = collection(db, "Users");
-
-      await addDoc(usersCollection, {
-        uid: userCredentials.user.uid,
-        firstName: fName,
-        lastName: lName,
-        email: email,
-      });
-
-      console.log("created ", userCredentials.user);
-
-      Swal.fire({
-        title: "Account Created",
-        text: "Your account has been successfully created.",
-        icon: "success",
-      }).then(() => {
-        changePage("home");
-      });
-    } catch (error) {
-      console.log("error", error.message);
-    }
-  });
-}
-
-function loginUser() {
-  $("#loginBtn").on("click", (e) => {
-    let email = $("#emailL").val();
-    let pw = $("#pwL").val();
-
-    signInWithEmailAndPassword(auth, email, pw)
-      .then((userCredentials) => {
-        Swal.fire({
-          title: "Logged In",
-          text: "You have successfully logged in.",
-          icon: "success",
-        }).then(() => {
-          changePage("home");
-        });
-        console.log("signed in", userCredentials.user);
-        // could query database here to bring back users info
-      })
-      .catch((error) => {
-        console.log("error", error.message);
-      });
-  });
 }
 
 const stateParks = [
@@ -927,17 +945,17 @@ export function changePage(pageId, parkId) {
 
       displayReviews(parkId);
     }
-    if (pageId === "home") {
-      showSlides();
-    }
-    if (pageId === "reviews") {
-      fetchAndDisplayAdminReviews();
-    }
     if (pageId === "login") {
       loginUser();
     }
     if (pageId === "signup") {
       createUser();
+    }
+    if (pageId === "home") {
+      showSlides();
+    }
+    if (pageId === "reviews") {
+      fetchAndDisplayAdminReviews();
     }
     if (pageId === "reservation") {
       getUserReservationInfo();
