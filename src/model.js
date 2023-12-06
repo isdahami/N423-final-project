@@ -1011,9 +1011,7 @@ function showSlides() {
 
 // Search functions
 function setupSearchFunctionality() {
-  const searchInput = document.getElementById(
-    "../dist/pages/searchResults.html"
-  );
+  const searchInput = document.getElementById("searchInput");
 
   $("#searchButton").on("click", (e) => {
     const searchTerm = searchInput.value.trim().toLowerCase();
@@ -1025,21 +1023,22 @@ function setupSearchFunctionality() {
   });
 
   async function performSearch(searchTerm) {
-    // Dynamically load the search results HTML
     try {
-      const searchResultsHtml = await $.get("#searchResults");
+      // Dynamically load the search results HTML
+      const searchResultsHtml = await $.get("pages/searchResults.html");
       $("#app").append(searchResultsHtml);
 
+      // Now that the HTML is loaded, find the searchResultsContainer
       const searchResultsContainer = document.getElementById("searchResults");
 
       if (searchResultsContainer) {
-        // Continue with the search logic...
+        // Use a different name for Firestore query to avoid conflicts
         const parksCollection = collection(db, "Parks");
-        const query = query(
+        const parksQuery = query(
           parksCollection,
           where("parkName", ">=", searchTerm)
         );
-        const searchResults = await getDocs(query);
+        const searchResults = await getDocs(parksQuery);
 
         // Process searchResults and update the UI
         displaySearchResults(searchResults);
