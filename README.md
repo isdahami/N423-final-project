@@ -33,7 +33,7 @@ Key Features:
 6. User Authentication:
    Sign-up and login features for user accounts.
    Secure data association with the appropriate users.
-7. Search Feature:
+7. Search Feature (not working):
    Easily find desired state parks for efficient navigation.
    Enhances user experience by providing a quick and effective search functionality.
 8. Optional Features (If Time Allows):
@@ -52,4 +52,4 @@ The Indiana Camping web application offers a user-friendly platform for explorin
 
 ## Link to Web4 Site:
 
-add link here
+https://in-info-web4.informatics.iupui.edu/~isdahami/N423/final-project/dist/
