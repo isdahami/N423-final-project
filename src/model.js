@@ -120,6 +120,8 @@ async function loginUser() {
 }
 
 // ====================================================================
+
+// ======================================================================
 // Profile functions, displays users data and reservations
 async function displayProfileData(user) {
   if (user) {
@@ -961,10 +963,11 @@ export function changePage(pageId, parkId) {
     if (pageId === "reservation") {
       getUserReservationInfo();
     }
-
+    setupSearchFunctionality();
     displayParkCards();
     displayProfileData(auth.currentUser);
     displayReviews();
+
     queryParkPageDisplay();
   })
     .done(function () {
@@ -1004,4 +1007,70 @@ function showSlides() {
   slides[slideIndex - 1].style.display = "block";
   dots[slideIndex - 1].className += " active";
   setTimeout(showSlides, 5000);
+}
+
+// Search functions
+function setupSearchFunctionality() {
+  const searchInput = document.getElementById(
+    "../dist/pages/searchResults.html"
+  );
+
+  $("#searchButton").on("click", (e) => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    performSearch(searchTerm);
+  });
+  $("#searchInput").on("click", (e) => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    performSearch(searchTerm);
+  });
+
+  async function performSearch(searchTerm) {
+    // Dynamically load the search results HTML
+    try {
+      const searchResultsHtml = await $.get("#searchResults");
+      $("#app").append(searchResultsHtml);
+
+      const searchResultsContainer = document.getElementById("searchResults");
+
+      if (searchResultsContainer) {
+        // Continue with the search logic...
+        const parksCollection = collection(db, "Parks");
+        const query = query(
+          parksCollection,
+          where("parkName", ">=", searchTerm)
+        );
+        const searchResults = await getDocs(query);
+
+        // Process searchResults and update the UI
+        displaySearchResults(searchResults);
+      } else {
+        console.error("searchResultsContainer not found");
+      }
+    } catch (error) {
+      console.error("Error loading searchResults.html:", error);
+    }
+  }
+
+  function displaySearchResults(results) {
+    const searchResultsContainer = document.getElementById("searchResults");
+
+    // Clear previous search results
+    searchResultsContainer.innerHTML = "";
+
+    if (results.size === 0) {
+      // No matching results
+      searchResultsContainer.innerHTML = "<p>No matching parks found.</p>";
+    } else {
+      // Iterate through the results and display them
+      results.forEach((doc) => {
+        const parkData = doc.data();
+        const parkName = parkData.parkName;
+
+        // Create a new element to display each result
+        const resultElement = document.createElement("div");
+        resultElement.innerHTML = `<p>${parkName}</p>`; //
+        searchResultsContainer.appendChild(resultElement);
+      });
+    }
+  }
 }
