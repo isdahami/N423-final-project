@@ -2,12 +2,7 @@
 
 ## Admin Login
 
-To try out the admin login features, you will need to have the login credentials. I have provided them below (will remove and update this after the project has been graded):
-
-```bash
-email: admin@isp.com
-pass: admin123
-```
+To try out the admin login features, you will need to have the login credentials. 
 
 Welcome to the Indiana Camping web application, a comprehensive platform designed to enhance your experience in Indiana State Parks. Explore the great outdoors, reserve camping spots, and make informed decisions with the following key features:
 
